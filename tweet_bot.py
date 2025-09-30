@@ -37,24 +37,43 @@ else:
 
 # Tweet selection: 2 hype → 1 burai
 cycle = index % 3
-if cycle in (0, 1):
+if cycle in (0, 1):  # hype tweet
     tweet = hype_tweets[(index // 3 * 2 + cycle) % len(hype_tweets)]
-else:
+    tweet_type = "hype"
+else:  # burai tweet
     tweet = burai_tweets[(index // 3) % len(burai_tweets)]
+    tweet_type = "burai"
 
-# Hashtags + Emojis
-hashtags = [
+# --- Hashtag Pools ---
+hype_hashtags = [
     "#BaseerAli", "#BaseerAli", "#BaseerAli",
     "#BiggBoss19", "#BaseerAliArmy", "#BaseerAliForTheWin",
     "#TeamBaseer", "#VoteForBaseerAli", "#BB19"
 ]
+
+roast_hashtags = [
+    "#Bailbuddhi", "#Zazu", "#VictimCard", "#RonaDhona", "#HoteRahoBully",
+    "#CircusGang", "#FootageKhaaoGang", "#RonaMachine",
+    "#FakeFriendship", "#LoserGang", "#CryBabyClub", "#GroupismKaBaap"
+]
+
+# --- Emoji Pool ---
 emojis = ["🔥", "💯", "👑", "🦁", "😂", "🤡", "😎", "💪", "❤️", "📉", "📈"]
 
-extra_tags = " ".join(random.choices(hashtags, k=random.randint(3, 6)))
+# Hashtag selection logic
+if tweet_type == "hype":
+    chosen_tags = random.choices(hype_hashtags, k=random.randint(3, 6))
+    # 30% chance add 1 roast hashtag for spice
+    if random.random() < 0.3:
+        chosen_tags.append(random.choice(roast_hashtags))
+else:  # burai tweet
+    chosen_tags = random.choices(roast_hashtags + hype_hashtags, k=random.randint(5, 8))
+
+extra_tags = " ".join(chosen_tags)
 extra_emojis = "".join(random.choices(emojis, k=random.randint(2, 4)))
 final_tweet = f"{tweet} {extra_tags} {extra_emojis}"
 
-# Match image category
+# --- Match Image Category ---
 category = ""
 if "clown" in tweet.lower() or "rona" in tweet.lower():
     category = "clown"
